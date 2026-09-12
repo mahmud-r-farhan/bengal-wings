@@ -1,0 +1,86 @@
+<!-- Save as 04_radar_tactical_dashboard.html and open in any web browser -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bengal Wings - Tactical Radar Dashboard</title>
+    <style>
+        body { background-color: #0b0f19; color: #00ffcc; font-family: monospace; text-align: center; margin: 0; }
+        #canvas-container { margin-top: 20px; }
+        canvas { border: 2px solid #00ffcc; background-color: #050811; border-radius: 50%; box-shadow: 0 0 20px rgba(0,255,204,0.3); }
+        .hud-panel { display: flex; justify-content: center; gap: 30px; margin-top: 15px; font-size: 16px; }
+        .panel-box { border: 1px solid #00ffcc; padding: 10px 20px; background: rgba(0,255,204,0.05); }
+    </style>
+</head>
+<body>
+
+    <h2>🦅 BENGAL WINGS :: TACTICAL RADAR HUD (GCS PLAYGROUND)</h2>
+    <p>Click anywhere on the radar circle to set an Autonomous Drone Waypoint!</p>
+
+    <div id="canvas-container">
+        <canvas id="radar" width="500" height="500"></canvas>
+    </div>
+
+    <div class="hud-panel">
+        <div class="panel-box">DRONE ALT: <span id="alt">18.5</span> m</div>
+        <div class="panel-box">SLAM STATUS: <span style="color: #00ff00;">LOCKED</span></div>
+        <div class="panel-box">LAST WAYPOINT: <span id="wpt">X: 0, Y: 0</span></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('radar');
+        const ctx = canvas.getContext('2d');
+        const center = canvas.width / 2;
+        let angle = 0;
+        let waypoints = [];
+
+        function drawRadar() {
+            ctx.fillStyle = 'rgba(5, 8, 17, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Radar Circles
+            ctx.strokeStyle = '#004433';
+            ctx.lineWidth = 1;
+            for (let r = 50; r < center; r += 50) {
+                ctx.beginPath();
+                ctx.arc(center, center, r, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+
+            // Draw Sweeping Line
+            ctx.strokeStyle = '#00ffcc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(center, center);
+            ctx.lineTo(center + center * Math.cos(angle), center + center * Math.sin(angle));
+            ctx.stroke();
+
+            // Draw User Placed Waypoints
+            waypoints.forEach((wpt, idx) => {
+                ctx.fillStyle = '#ff3366';
+                ctx.beginPath();
+                ctx.arc(wpt.x, wpt.y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.fillText(`WPT ${idx+1}`, wpt.x + 8, wpt.y + 4);
+            });
+
+            angle += 0.03;
+            requestAnimationFrame(drawRadar);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            waypoints.push({x, y});
+            
+            // Map Screen pixels to local meter grid
+            let meterX = ((x - center) / 10).toFixed(2);
+            let meterY = ((center - y) / 10).toFixed(2);
+            document.getElementById('wpt').innerText = `X: ${meterX}m, Y: ${meterY}m`;
+        });
+
+        drawRadar();
+    </script>
+</body>
+</html>
