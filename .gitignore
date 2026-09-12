@@ -1,0 +1,17 @@
+# Build / simulation artifacts
+build_*
+*.o
+*.out
+a.out
+logs/*.log
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editors / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

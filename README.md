@@ -8,6 +8,30 @@
 > 
 >   
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Hardware: CERN-OHL-S-v2](https://img.shields.io/badge/HW%20License-CERN--OHL--S--v2-orange.svg)](LICENSE)
+[![CI](https://github.com/mahmud-r-farhan/bengal-wings/actions/workflows/ci.yml/badge.svg)](https://github.com/mahmud-r-farhan/bengal-wings/actions/workflows/ci.yml)
+[![Python 3.9+ stdlib-only](https://img.shields.io/badge/Python-3.9%2B%20stdlib--only-3776ab)](gcs/)
+
+## ⚡ Quick Start — Try It in 60 Seconds
+
+রিপোজিটরির Phase 1 **GCS Core** এখন সম্পূর্ণ কার্যকর — কোনো ডিপেন্ডেন্সি ছাড়াই, শুধুমাত্র Python standard library:
+
+```bash
+git clone https://github.com/mahmud-r-farhan/bengal-wings.git
+cd bengal-wings
+make gcs          # → খুলুন: http://localhost:8090/
+make test         # ২২টি unit tests: flight model, LALS trilateration, WS codec
+```
+
+Live operator console: tactical radar PPI, GPS-Denied EKF/LALS fusion display,
+Edge-AI threat grid (with injectable simulated GNSS jamming), mission controls,
+and a 10 Hz WebSocket telemetry bus — driven by the deterministic AEGIS-CORE
+flight simulator in [`gcs/`](gcs/). **Simulated data only — no live hardware is
+connected or controlled by the demo.**
+
+---
+
 ## 📄 Executive Summary & Vision
 
 **Bengal Wings** হলো একটি প্রোডাকশন-গ্রেড, মডিউলার এবং ডিফেন্স-ফার্স্ট অটোনোমাস রোবোটিক ইকোসিস্টেম। ২০২৬ সালের ইলেকট্রনিক ওয়ারফেয়ার (EW), জিপিএস জ্যামিং, এবং স্যাটেলাইট বিচ্ছিন্ন (GPS-Denied) যুদ্ধক্ষেত্রের চ্যালেঞ্জ মোকাবিলায় এটি ডিজাইন করা হয়েছে।
@@ -26,15 +50,26 @@
 
 ```
 bengal-wings/
-├── README.md                          # Global Master Architecture & Roadmap
-├── LICENSE                            # Software & Hardware Licensing Rules
+├── README.md                          # Global Master Architecture & Roadmap (this file)
+├── Makefile                           # Repo shortcuts: make gcs | make test | make check
+├── LICENSE                            # Software (GPLv3) & Hardware (CERN-OHL-S-v2) Licensing Rules
+├── .github/workflows/ci.yml           # CI gate: syntax, unit tests, GCS boot smoke test
 ├── docs/
 │   ├── HARDWARE_AND_PHYSICAL.md       # Drone Frame, Flight Controller & Sensors
 │   ├── SOFTWARE_AND_FIRMWARE.md       # PX4, ROS2, Visual SLAM & GCS Architecture
 │   ├── AI_AND_THREAT_DETECTION.md     # TensorRT, YOLOv10 & Sensor Fusion
 │   ├── LALS_MANUFACTURING_AND_TEST.md # Local Area Positioning System (UWB) Specs & Tests
 │   └── FUTURE_MODULES_ARCH.md         # Architecture for Swarms, UGV, Anti-Drone & CQB Micro-UAVs
-
+├── gcs/                               # ⭐ Phase 1 GCS CORE — runnable telemetry server + dashboard
+│   ├── sim.py                         #   Flight / LALS / Edge-AI / power simulation engine
+│   ├── server.py                      #   HTTP + RFC 6455 WebSocket stream (stdlib only)
+│   └── web/                           #   Tactical dashboard (HTML/CSS/JS, no frameworks)
+├── playground/                        # 25 standalone cross-layer code examples (see its README)
+├── tasks/
+│   ├── PHASE_01_STARTER_PLAN.md       # Step-by-step Phase 1 execution plan
+│   └── SCRATCH_BUILD_TASK_PLAN.md     # End-to-end scratch build pipeline plan
+└── tests/
+    └── test_gcs.py                    # GCS core unit suite (python3 -m unittest)
 ```
 
 ## 🗺️ Master System Architecture
@@ -87,7 +122,7 @@ bengal-wings/
     
       
     
--   [x] Telemetry Stream and Ground Control Station (GCS) Core.
+-   [x] Telemetry Stream and Ground Control Station (GCS) Core — **runnable in-repo:** [`gcs/`](gcs/) (radar PPI, LALS fusion, Edge-AI grid, 10 Hz WS bus).
     
       
     

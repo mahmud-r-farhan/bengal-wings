@@ -1,0 +1,139 @@
+/* ============================================================================
+   🦅 BENGAL WINGS GCS — tactical dashboard styling
+   Dark ops-room theme matching the playground radar HUD palette.
+   ========================================================================== */
+:root {
+  --bg: #050810;
+  --panel: #0a1120;
+  --line: #10353a;
+  --accent: #00ffcc;
+  --accent-dim: #0d7f6a;
+  --amber: #ffb347;
+  --red: #ff4d6d;
+  --text: #b9e8dd;
+  --dim: #4f7a72;
+  --mono: "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #0a1a2b 0%, var(--bg) 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.45;
+}
+#app { max-width: 1480px; margin: 0 auto; padding: 14px 16px 8px; display: flex; flex-direction: column; gap: 12px; }
+
+/* ---------------------------------------------------------------- top bar */
+#topbar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.logo { font-size: 26px; filter: drop-shadow(0 0 8px rgba(0,255,204,.6)); }
+.brand-text h1 { margin: 0; font-size: 19px; letter-spacing: 2.5px; color: var(--accent); text-shadow: 0 0 14px rgba(0,255,204,.35); }
+.brand-text .ver { font-size: 11px; color: var(--dim); }
+.brand-text .bn { margin: 0; font-size: 11px; color: var(--dim); letter-spacing: .4px; }
+.dim { color: var(--dim); }
+#pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  border: 1px solid var(--line); border-radius: 3px; padding: 4px 10px;
+  font-size: 11px; letter-spacing: 1px; color: var(--text); background: rgba(0,255,204,.03);
+}
+.pill.good { color: #66ffcc; border-color: #1e6f5c; }
+.pill.warn { color: var(--amber); border-color: #7a5a1e; }
+.pill.bad  { color: var(--red);  border-color: #7a2437; animation: blink 1s steps(2) infinite; }
+.pill.sim-flag { color: var(--amber); border-color: #7a5a1e; background: rgba(255,179,71,.06); }
+.clock { margin-left: auto; font-size: 12px; color: var(--dim); letter-spacing: 1px; }
+@keyframes blink { 50% { opacity: .45; } }
+
+#jam-banner {
+  display: none; text-align: center; padding: 6px; letter-spacing: 2px; font-size: 12px;
+  color: var(--red); border: 1px dashed var(--red); background: rgba(255,77,109,.08);
+  animation: blink 1.2s steps(2) infinite;
+}
+#jam-banner.on { display: block; }
+
+/* ------------------------------------------------------------------ grid */
+#grid { display: grid; grid-template-columns: minmax(480px, 1.25fr) minmax(420px, 1fr); gap: 12px; align-items: stretch; }
+.col { display: flex; flex-direction: column; gap: 12px; }
+.panel { background: linear-gradient(180deg, rgba(0,255,204,.02), transparent 40%), var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+.panel-title { font-size: 10.5px; letter-spacing: 2.2px; color: var(--accent-dim); margin-bottom: 8px; border-bottom: 1px solid #0d2230; padding-bottom: 5px; }
+
+/* ----------------------------------------------------------------- radar */
+#radar-panel { display: flex; flex-direction: column; }
+#radar-wrap { position: relative; flex: 1; min-height: 480px; }
+#radar { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; }
+.radar-foot { display: flex; gap: 16px; align-items: center; margin-top: 8px; font-size: 11px; color: var(--dim); flex-wrap: wrap; }
+.legend { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 9px; height: 9px; display: inline-block; border-radius: 1px; }
+.sw.drone { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+.sw.wpt { border: 1px solid var(--accent); background: transparent; }
+.sw.host { background: var(--red); box-shadow: 0 0 6px var(--red); border-radius: 50%; }
+.sw.anc { background: #4d9fff; border-radius: 50%; }
+.hint { margin-left: auto; }
+
+/* ------------------------------------------------------------ attitude */
+#att-wrap { position: relative; height: 210px; }
+#att { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ----------------------------------------------------------- telemetry */
+.kv { width: 100%; border-collapse: collapse; }
+.kv td, .kv th { padding: 3px 6px; border: 1px solid #0d2230; white-space: nowrap; }
+.kv td { color: var(--dim); font-size: 10px; letter-spacing: 1.2px; width: 12%; }
+.kv th { color: var(--text); font-weight: 500; font-size: 12.5px; width: 21.3%; }
+.kv th.hot { color: var(--amber); } .kv th.cold { color: var(--red); }
+.batt-bar { height: 6px; border: 1px solid #0d2230; margin-top: 8px; border-radius: 3px; overflow: hidden; }
+#batt-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #00ff9d, #baff3a); transition: width .4s; }
+#batt-fill.low { background: linear-gradient(90deg, var(--amber), #ff7b3a); }
+#batt-fill.crit { background: linear-gradient(90deg, #ff2f55, #ff7b3a); animation: blink 1s steps(2) infinite; }
+
+/* ------------------------------------------------------- tables (lals, ai) */
+.grid-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.grid-table th { font-size: 9.5px; color: var(--dim); letter-spacing: 1.6px; text-align: left; padding: 3px 6px; border-bottom: 1px solid #0d2230; }
+.grid-table td { padding: 3.5px 6px; border-bottom: 1px dotted #0f2b33; }
+.qbar { display: inline-block; width: 52px; height: 5px; background: #0d2230; border-radius: 2px; overflow: hidden; vertical-align: middle; }
+.qbar i { display: block; height: 100%; background: var(--accent); }
+.qbar.degraded i { background: var(--amber); }
+.st-ok { color: #66ffcc; } .st-deg { color: var(--amber); } .st-crit { color: var(--red); animation: blink 1s steps(2) infinite; }
+#contacts-table tbody tr.p-CRITICAL { background: rgba(255,77,109,.07); }
+.scan-note { margin-top: 6px; font-size: 10.5px; color: var(--dim); letter-spacing: 1px; }
+#ai-state { color: var(--accent); }
+#lals-panel tbody, #contacts-panel tbody { min-height: 40px; }
+.empty-note { color: var(--dim); font-style: italic; }
+
+/* -------------------------------------------------------------- controls */
+#controls .ctrl-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+button {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 1.2px; cursor: pointer;
+  color: var(--text); background: rgba(0,255,204,.05);
+  border: 1px solid #1c4a44; border-radius: 3px; padding: 8px 14px; transition: all .15s;
+}
+button:hover { background: rgba(0,255,204,.14); box-shadow: 0 0 10px rgba(0,255,204,.25); }
+button:active { transform: translateY(1px); }
+button.primary { border-color: var(--accent-dim); color: var(--accent); }
+button.danger { border-color: #7a2437; color: var(--red); }
+button.danger:hover { background: rgba(255,77,109,.12); box-shadow: 0 0 10px rgba(255,77,109,.3); }
+button.ew { border-color: #7a5a1e; color: var(--amber); }
+button.ew.active { background: rgba(255,77,109,.15); color: var(--red); border-color: var(--red); animation: blink 1.2s steps(2) infinite; }
+button.ghost { color: var(--dim); border-style: dashed; }
+.divider { width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
+.rate { display: inline-flex; gap: 6px; align-items: center; color: var(--dim); font-size: 10.5px; letter-spacing: 1.4px; }
+select { font-family: var(--mono); background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 3px; padding: 6px; }
+
+/* --------------------------------------------------------------- console */
+#console { max-height: 170px; overflow: hidden; display: flex; flex-direction: column; }
+#log-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; font-size: 11.5px; flex: 1; }
+#log-list li { padding: 1.5px 0; border-bottom: 1px dotted #0c1e29; white-space: pre-wrap; }
+#log-list .tg { display: inline-block; width: 46px; }
+.t-CMD { color: #7fd4ff; } .t-NAV { color: var(--accent); } .t-AI { color: var(--amber); }
+.t-WARN { color: var(--red); } .t-EW { color: #ff7ab3; } .t-EKF { color: #c792ea; } .t-SIM { color: var(--dim); }
+
+/* ------------------------------------------------------------------ foot */
+#foot { text-align: center; color: var(--dim); font-size: 10px; letter-spacing: 1.2px; padding: 6px 0 10px; }
+#foot b { color: var(--amber); font-weight: 600; }
+
+@media (max-width: 1100px) {
+  #grid { grid-template-columns: 1fr; }
+  #radar-wrap { min-height: 360px; }
+}

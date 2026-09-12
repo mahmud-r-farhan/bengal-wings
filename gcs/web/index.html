@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BENGAL WINGS — GCS Tactical Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🦅</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">🦅</span>
+      <div class="brand-text">
+        <h1>BENGAL WINGS <span class="dim">//</span> GCS <span class="ver">v1.0</span></h1>
+        <p class="bn">গ্রাউন্ড কন্ট্রোল স্টেশন — জিপিএস-ডিনাইড অটোনমাস রিকন</p>
+      </div>
+    </div>
+    <div id="pills">
+      <span class="pill" id="pill-link">LINK: …</span>
+      <span class="pill" id="pill-arm">ARM: —</span>
+      <span class="pill" id="pill-gnss">GNSS: —</span>
+      <span class="pill sim-flag">SIM ONLY</span>
+    </div>
+    <div class="clock"><span id="utc-clock">--:--:--</span> UTC · T+<span id="sim-clock">0.0</span>s</div>
+  </header>
+
+  <div id="jam-banner">⚠ GNSS DENIED — NAV SOURCE SWITCHED TO LALS + OPTICAL FLOW ⚠</div>
+
+  <main id="grid">
+    <section class="panel" id="radar-panel">
+      <div class="panel-title">TACTICAL PPI — LALS LOCAL GRID (NORTH-UP)</div>
+      <div id="radar-wrap"><canvas id="radar"></canvas></div>
+      <div class="radar-foot">
+        <span class="legend"><i class="sw drone"></i>AEGIS-CORE</span>
+        <span class="legend"><i class="sw wpt"></i>WAYPOINT</span>
+        <span class="legend"><i class="sw host"></i>HIGH-VALUE CONTACT</span>
+        <span class="legend"><i class="sw anc"></i>LALS ANCHOR</span>
+        <span class="hint">click map → insert GOTO waypoint</span>
+      </div>
+    </section>
+
+    <section class="col">
+      <div class="panel" id="att-panel">
+        <div class="panel-title">ATTITUDE — EKF3 FILTER</div>
+        <div id="att-wrap"><canvas id="att"></canvas></div>
+      </div>
+      <div class="panel" id="telem-panel">
+        <div class="panel-title">TELEMETRY STREAM</div>
+        <table class="kv" id="telem">
+          <tr><td>MODE</td><th id="t-mode">—</th><td>ALT AGL</td><th id="t-alt">—</th><td>HDG</td><th id="t-hdg">—</th></tr>
+          <tr><td>SPD GND</td><th id="t-gs">—</th><td>V-SPEED</td><th id="t-vs">—</th><td>THROTTLE</td><th id="t-thr">—</th></tr>
+          <tr><td>BATT</td><th id="t-batt">—</th><td>VOLTAGE</td><th id="t-volt">—</th><td>CURRENT</td><th id="t-cur">—</th></tr>
+          <tr><td>LINK RSSI</td><th id="t-rssi">—</th><td>FRAME LOSS</td><th id="t-loss">—</th><td>TX RATE</td><th id="t-rate">—</th></tr>
+          <tr><td>NAV SRC</td><th colspan="3" id="t-nav">—</th><td>HDOP</td><th id="t-hdop">—</th></tr>
+          <tr><td>POS ERR</td><th colspan="3" id="t-perr">—</th><td>LCLS/X</td><th id="t-xy">—</th></tr>
+        </table>
+        <div class="batt-bar"><div id="batt-fill"></div></div>
+      </div>
+
+      <div class="panel" id="lals-panel">
+        <div class="panel-title">LALS UWB ANCHOR GRID — 2-WAY ToF RANGING</div>
+        <table class="grid-table" id="lals-table">
+          <thead><tr><th>ANCHOR</th><th>RANGE</th><th>LINK Q</th><th>STATE</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="panel" id="contacts-panel">
+        <div class="panel-title">EDGE-AI THREAT DETECTION — YOLOv10 · TENSORRT FP16</div>
+        <table class="grid-table" id="contacts-table">
+          <thead><tr><th>ID</th><th>CLASS</th><th>RNG</th><th>BRG</th><th>CONF</th><th>PRIO</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="scan-note"><span id="ai-state">SENSOR STANDBY</span> · detection gate conf &gt; 0.75</div>
+      </div>
+    </section>
+  </main>
+
+  <section id="controls" class="panel">
+    <div class="panel-title">MISSION CONTROL</div>
+    <div class="ctrl-row">
+      <button data-cmd="arm">ARM</button>
+      <button data-cmd="takeoff" class="primary">AUTO TAKEOFF</button>
+      <button data-cmd="mission">START MISSION</button>
+      <button data-cmd="hold">HOLD</button>
+      <button data-cmd="rtl">RTL</button>
+      <button data-cmd="land">LAND</button>
+      <button data-cmd="disarm" class="danger">DISARM</button>
+      <span class="divider"></span>
+      <button id="btn-jam" class="ew">INJECT GNSS JAM</button>
+      <label class="rate">SIM RATE
+        <select id="rate">
+          <option value="1">1×</option><option value="2">2×</option>
+          <option value="4">4×</option>
+        </select>
+      </label>
+      <button id="btn-reset" class="ghost">RESET SIM</button>
+    </div>
+  </section>
+
+  <section id="console" class="panel">
+    <div class="panel-title">EVENT CONSOLE — MISSION / AI / EW LOG</div>
+    <ul id="log-list"></ul>
+  </section>
+
+  <footer id="foot">
+    BENGAL WINGS · AEGIS-CORE PHASE 1 GCS CORE — TELEMETRY STREAM &amp; OPERATOR CONSOLE ·
+    <b>SIMULATED DATA ONLY — NO LIVE AIRFRAME IS CONNECTED OR CONTROLLED BY THIS DEMO</b> ·
+    GPL-3.0 / CERN-OHL-S-v2
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
