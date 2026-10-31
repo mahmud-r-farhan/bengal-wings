@@ -1,10 +1,8 @@
 # 🦅 Bengal Wings (`bengal-wings`)
 
-> **Autonomous Aerial Reconnaissance, Edge AI & Defence Ecosystem**
-> 
->   
-> 
-> _Architected for GPS-Denied Warfare, Local Area Positioning Systems (LALS), Autonomous Swarm Orchestration, and Counter-UAV Defense._
+> **Aerial-systems simulation & community emergency-response tools**
+>
+> _An experimental software repository: a deterministic GCS simulator and Shomoy (সময়), an offline-capable local flood-response board. No live aircraft, sensors, or dispatch service._
 > 
 >   
 
@@ -24,21 +22,21 @@ make gcs          # → খুলুন: http://localhost:8090/
 make test         # ২২টি unit tests: flight model, LALS trilateration, WS codec
 ```
 
-Live operator console: tactical radar PPI, GPS-Denied EKF/LALS fusion display,
-Edge-AI threat grid (with injectable simulated GNSS jamming), mission controls,
-and a 10 Hz WebSocket telemetry bus — driven by the deterministic AEGIS-CORE
-flight simulator in [`gcs/`](gcs/). **Simulated data only — no live hardware is
-connected or controlled by the demo.**
+The GCS simulation console includes radar, simulated LALS telemetry and mission controls. **Simulated data only — no live aircraft or hardware is connected or controlled.**
+
+### Community response board
+
+Open **[http://localhost:8090/response.html](http://localhost:8090/response.html)** for Shomoy (সময়), an offline-capable flood/community response board. It lets local volunteers record and prioritize needs, keep follow-up status, register nearby capacity (boats, teams, shelter, water), and export/import JSON backups or CSV reports. It uses browser-local storage only; there are no accounts, network uploads, or third-party map/font dependencies. Install the page once while online to cache the app shell for offline use. GPS is optional, permission-based and stays on the device.
+
+This is a coordination aid—not an official warning, needs assessment, dispatch system, or substitute for Bangladesh's local disaster-management authorities. Verify reports and coordinate urgent action with responsible local responders. See [GCS docs](gcs/README.md#community-response-board) for privacy, backup, and operating notes.
 
 ---
 
 ## 📄 Executive Summary & Vision
 
-**Bengal Wings** হলো একটি প্রোডাকশন-গ্রেড, মডিউলার এবং ডিফেন্স-ফার্স্ট অটোনোমাস রোবোটিক ইকোসিস্টেম। ২০২৬ সালের ইলেকট্রনিক ওয়ারফেয়ার (EW), জিপিএস জ্যামিং, এবং স্যাটেলাইট বিচ্ছিন্ন (GPS-Denied) যুদ্ধক্ষেত্রের চ্যালেঞ্জ মোকাবিলায় এটি ডিজাইন করা হয়েছে।
+**Bengal Wings is an experimental software repository—not a production drone system.** Its runnable aerial component is a deterministic, simulated Ground Control Station (GCS); no hardware, real navigation, object detection, or aircraft control is implemented or validated here. The hardware, firmware and autonomy documents are design notes, not field-tested specifications.
 
-  
-
-এই রিপোজিটরি হল সিস্টেমের একক ডিজিটাল কারখানাস্বরূপ (Single Source of Truth)। এখানে সিস্টেমের চূড়ান্ত ভিশন—যা ভবিষ্যতে ৭টি মূল প্রতিরক্ষা মডিউল কভার করবে—এবং বর্তমানের প্রথমিক বাস্তবায়ন পর্ব (Phase 1) একই সাথে বিন্যস্ত করা হয়েছে।
+The repository now also includes **Shomoy (সময়)**, a practical, offline-capable community flood-response board for recording needs and nearby resources. It stores records in one browser only and does not send alerts, dispatch help, or sync between devices. Use it with local authorities, verify every report, and export backups carefully. See [GCS documentation](gcs/README.md#community-response-board) for details.
 
   
 
@@ -63,7 +61,7 @@ bengal-wings/
 ├── gcs/                               # ⭐ Phase 1 GCS CORE — runnable telemetry server + dashboard
 │   ├── sim.py                         #   Flight / LALS / Edge-AI / power simulation engine
 │   ├── server.py                      #   HTTP + RFC 6455 WebSocket stream (stdlib only)
-│   └── web/                           #   Tactical dashboard (HTML/CSS/JS, no frameworks)
+│   └── web/                           #   Simulator UI + Shomoy response board (HTML/CSS/JS)
 ├── playground/                        # 25 standalone cross-layer code examples (see its README)
 ├── tasks/
 │   ├── PHASE_01_STARTER_PLAN.md       # Step-by-step Phase 1 execution plan
@@ -72,7 +70,9 @@ bengal-wings/
     └── test_gcs.py                    # GCS core unit suite (python3 -m unittest)
 ```
 
-## 🗺️ Master System Architecture
+## 🗺️ Concept architecture (not implemented)
+
+The block diagram below is aspirational documentation only; only the simulator and browser-based response board run in this repository. It is not evidence of tested airframe, perception, navigation or communications capability.
 
 ```
                                  ┌──────────────────────────────────────────┐
@@ -106,56 +106,18 @@ bengal-wings/
 
 ```
 
-## 🚀 Production Phase & Roadmap
+## 🚀 Development roadmap (prototype scope)
 
-### Phase 1: Foundation (Active Phase)
+### Current, runnable software
 
--   [x] GPS-Denied Indoor/Outdoor Visual Navigation (Optical Flow + Visual SLAM).
-    
-      
-    
--   [x] Edge Computing Threat Detection Pipeline (YOLOv10 + NVIDIA TensorRT).
-    
-      
-    
--   [x] **LALS (Local Area Positioning System)** Anchor & Rover Module R&D.
-    
-      
-    
--   [x] Telemetry Stream and Ground Control Station (GCS) Core — **runnable in-repo:** [`gcs/`](gcs/) (radar PPI, LALS fusion, Edge-AI grid, 10 Hz WS bus).
-    
-      
-    
+-   [x] Deterministic GCS flight / LALS / perception / power **simulation** — [`gcs/`](gcs/). Simulated contacts and injected GNSS degradation are not real sensor detections or RF testing.
+-   [x] Shomoy community flood-response board — offline shell, local-browser storage, needs follow-up, local resource register and export/import.
 
-### Phase 2: Mesh & Swarm Readiness
+### Next useful steps for Shomoy (not yet implemented)
 
--   [ ] Encrypted P2P Tactical Mesh Communication Node.
-    
-      
-    
--   [ ] Anti-tamper Hardware Self-Destruct / Data-Wipe Mechanism.
-    
-      
-    
--   [ ] Multi-drone Swarm Coordination Protocol.
-    
-      
-    
+-   [ ] Review the forms and triage labels with Bangladesh community responders before operational use.
+-   [ ] Add a complete Bangla interface and test it with low-bandwidth, low-literacy workflows.
+-   [ ] Design a safe handoff workflow for multiple devices; there is no shared database or synchronization today.
+-   [ ] Only publish verified shelter/contact directories with a named maintainer and a visible last-checked date; none are bundled because stale emergency information can be dangerous.
 
-### Phase 3: Land & Air Hybrid Systems
-
--   [ ] Unmanned Ground Vehicle (UGV) Base Unit integration with Drone Docking.
-    
-      
-    
--   [ ] Micro-UAV Deployment Mechanism for CQB / Indoor Reconnaissance.
-    
-      
-    
-
-### Phase 4: Active Electronic & Kinetic Defence
-
--   [ ] Counter-UAV Jamming Module & Autonomous Interceptor Drone.
-    
-      
-    
+The aerial hardware, autonomy, and networking concepts elsewhere in `docs/` remain **unimplemented research notes**, not committed production phases or field-tested capabilities.
