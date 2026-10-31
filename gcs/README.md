@@ -1,8 +1,6 @@
 # 🦅 Bengal Wings — GCS Core (`gcs/`)
 
-> **Phase 1 deliverable:** *Telemetry Stream and Ground Control Station (GCS) Core*
-> Zero-dependency Python telemetry server + browser tactical dashboard for the
-> AEGIS-CORE autonomous GPS-denied reconnaissance platform.
+> **Runnable software prototype:** zero-dependency Python telemetry server + browser dashboard for a deterministic flight/LALS/perception **simulation**. It does not connect to or control an aircraft; hardware and autonomy documentation is not field validation.
 
 ---
 
@@ -28,6 +26,19 @@ keyboard shortcuts `a r m / t a k e o f f / h o l d / r t l / l a n d` to fly it
 | `--seed` | `2026` | Deterministic simulation seed (reproducible tests/demos) |
 
 ---
+
+## Community response board
+
+Open `http://localhost:8090/response.html` (or choose **COMMUNITY RESPONSE BOARD** from the simulator header) to use Shomoy / সময়. It is a standalone, mobile-friendly flood and community-emergency coordination board, not an airframe control panel.
+
+- Record needs with urgency, location, affected people, access conditions and follow-up status; register nearby boats, transport, shelter, supplies or volunteer teams.
+- Search/filter reports, assign a team, print the board, download a CSV, and export/import a JSON backup. Import merges records by reference ID.
+- Reports live in this browser's `localStorage` only. There is **no login, server database, cloud sync or upload**. Each device/browser has a separate copy; exchange backups deliberately and reconcile duplicates with responders.
+- The first visit must load the app shell while online for service-worker caching to work offline (HTTPS or localhost required by browsers). Local storage still works when internet is unavailable, but browser/device loss can destroy data—export backups to secure storage.
+- GPS is opt-in after pressing the location button; coordinates are placed in the local form only. Avoid recording names, national IDs, private contact details or sensitive health information. Treat exports as sensitive.
+- P1/P2/P3 are operator-selected prompts, **not a scored assessment or official dispatch priority**. Verify reports and coordinate urgent action with the Union/Upazila Disaster Management Committee and responsible emergency responders. The board provides no live alerts or rescue dispatch.
+
+The field categories reflect needs highlighted in the [UN Bangladesh pre-crisis flood assessment](https://bangladesh.un.org/en/247856-pre-crisis-assessment-monsoon-flooding-bangladesh-humanitarian-coordination-task-team-hctt) (safe water, food, sanitation and other essential needs) and align with the coordination context in the Bangladesh [Department of Disaster Management Standing Orders](https://ddm.gov.bd/site/view/policies/%E0%A6%8F%E0%A6%B8%E0%A6%93%E0%A6%A1%E0%A6%BF%28SOD%29). These sources inform the tool; they are not live data feeds.
 
 ## 🧭 What It Simulates (maps 1:1 to `docs/`)
 
@@ -61,7 +72,7 @@ gcs/
 ├── __main__.py   # python3 -m gcs entry point
 ├── sim.py        # flight / LALS / AI-perception / power simulation core
 ├── server.py     # HTTP + RFC 6455 WebSocket telemetry server (stdlib only)
-└── web/          # operator dashboard: index.html · style.css · app.js
+└── web/          # simulator dashboard + Shomoy response app (response.html/css/js/sw.js)
 tests/
 └── test_gcs.py   # 22 unit tests: trilateration math, state machine, codec
 ```

@@ -26,7 +26,13 @@ jobs:
           test -f gcs/web/index.html
           test -f gcs/web/style.css
           test -f gcs/web/app.js
+          test -f gcs/web/response.html
+          test -f gcs/web/response.css
+          test -f gcs/web/response.js
+          test -f gcs/web/response-sw.js
           node --check gcs/web/app.js
+          node --check gcs/web/response.js
+          node --check gcs/web/response-sw.js
 
       - name: Unit tests
         run: python3 -m unittest discover -s tests -v
@@ -38,6 +44,9 @@ jobs:
           curl -fsS http://127.0.0.1:8090/api/status
           curl -fsS http://127.0.0.1:8090/api/telemetry | python3 -m json.tool > /dev/null
           curl -fsS http://127.0.0.1:8090/ | grep -q "BENGAL WINGS"
+          curl -fsS http://127.0.0.1:8090/response.html | grep -q "Shomoy"
+          curl -fsS http://127.0.0.1:8090/response.js | grep -q "STORE_KEY"
+          curl -fsS http://127.0.0.1:8090/response-sw.js | grep -q "shomoy-offline"
           curl -fsS -X POST http://127.0.0.1:8090/api/command \
                -H 'Content-Type: application/json' -d '{"cmd":"hold"}'
           kill $PID

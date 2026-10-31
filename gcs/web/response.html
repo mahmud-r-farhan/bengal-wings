@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103c35">
+  <meta name="description" content="An offline-capable, locally stored flood response board for community volunteers in Bangladesh.">
+  <title>Shomoy — Community Response Board</title>
+  <link rel="stylesheet" href="response.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="response.html" aria-label="Shomoy response board home">
+      <span class="brand-mark" aria-hidden="true">শ</span>
+      <span><strong>Shomoy <small>/ সময়</small></strong><em>COMMUNITY RESPONSE BOARD</em></span>
+    </a>
+    <div class="top-actions">
+      <span id="connection-state" class="connection"><i></i><span>Checking…</span></span>
+      <a class="quiet-link" href="/" title="Open the Bengal Wings simulation dashboard">Flight simulator <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro">
+      <div>
+        <p class="eyebrow">BANGLADESH · FLOOD & COMMUNITY EMERGENCY SUPPORT</p>
+        <h1>Make the next response<br><span>easier to coordinate.</span></h1>
+        <p class="lede">A simple shared-screen board for recording needs, tracking follow-up and finding nearby help. Designed to keep working when the internet doesn’t.</p>
+      </div>
+      <div class="intro-actions">
+        <button class="button primary" id="new-request">＋ Log a need <span lang="bn">প্রয়োজন জানান</span></button>
+        <button class="button secondary" id="new-resource">＋ Register help</button>
+        <div class="privacy-note"><span aria-hidden="true">▣</span> Saved only in this browser · no account · no server upload</div>
+      </div>
+    </section>
+
+    <div class="notice" role="note">
+      <strong>Use alongside local responders.</strong> Verify reports by phone or in person, and coordinate urgent rescue through the Union/Upazila Disaster Management Committee or emergency services. This board does not dispatch responders or provide live alerts.
+    </div>
+
+    <section class="metrics" aria-label="Board summary">
+      <article class="metric"><span>OPEN NEEDS</span><strong id="metric-open">0</strong><small>not yet resolved</small></article>
+      <article class="metric urgent"><span>IMMEDIATE</span><strong id="metric-critical">0</strong><small>life / safety at risk</small></article>
+      <article class="metric"><span>PEOPLE AFFECTED</span><strong id="metric-people">0</strong><small>across open reports</small></article>
+      <article class="metric"><span>HELP AVAILABLE</span><strong id="metric-resources">0</strong><small>registered resources</small></article>
+    </section>
+
+    <section class="workspace">
+      <div class="board panel">
+        <div class="panel-head">
+          <div><p class="eyebrow">FIELD BOARD</p><h2>Community needs</h2></div>
+          <div class="head-actions">
+            <button class="button small secondary" id="export-data" title="Download a backup of this board">Export backup</button>
+            <button class="button small secondary" id="export-csv" title="Download need reports as a spreadsheet-compatible CSV">Export CSV</button>
+            <button class="button small secondary" id="print-board">Print</button>
+            <label class="button small secondary file-button" for="import-file">Import backup</label>
+            <input id="import-file" type="file" accept="application/json,.json" hidden>
+          </div>
+        </div>
+        <div class="filters">
+          <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search place, need, or reference…" aria-label="Search reports"></label>
+          <label class="filter-label">Show
+            <select id="status-filter"><option value="active">Open needs</option><option value="all">All reports</option><option value="resolved">Resolved</option></select>
+          </label>
+          <label class="filter-label">Type
+            <select id="category-filter"><option value="all">All types</option><option value="Rescue">Rescue / evacuation</option><option value="Medical">Medical</option><option value="Safe water">Safe water</option><option value="Food">Food</option><option value="Shelter">Shelter</option><option value="Sanitation">Sanitation</option><option value="Access">Road / access</option><option value="Other">Other</option></select>
+          </label>
+        </div>
+        <div id="request-list" class="request-list" aria-live="polite"></div>
+        <p id="list-count" class="list-count"></p>
+      </div>
+
+      <aside class="sidebar">
+        <section class="panel resource-panel">
+          <div class="panel-head compact"><div><p class="eyebrow">LOCAL CAPACITY</p><h2>Help nearby</h2></div><button id="new-resource-mini" class="icon-button" aria-label="Register help">＋</button></div>
+          <p class="subtle">Boats, transport, shelter space, medical teams, water or other help.</p>
+          <div id="resource-list" class="resource-list"></div>
+        </section>
+        <section class="panel guide-panel">
+          <p class="eyebrow">FIELD REMINDER</p>
+          <h3>Record what helps responders act</h3>
+          <ul>
+            <li>Upazila, union, village and a recognizable landmark.</li>
+            <li>What is needed, how many people, and whether access is cut off.</li>
+            <li>Flag urgent medical or immediate life-safety risks first.</li>
+            <li>Don't record full names, ID numbers or sensitive medical details.</li>
+          </ul>
+          <p class="source-note">Priorities reflect Bangladesh flood assessments highlighting safe water, food, sanitation, shelter and healthcare. Triage choices are for coordination—not an official assessment.</p>
+          <div class="source-links"><a href="https://bangladesh.un.org/en/247856-pre-crisis-assessment-monsoon-flooding-bangladesh-humanitarian-coordination-task-team-hctt" target="_blank" rel="noopener">UN Bangladesh needs assessment ↗</a><a href="https://ddm.gov.bd/site/view/policies/%E0%A6%8F%E0%A6%B8%E0%A6%93%E0%A6%A1%E0%A6%BF%28SOD%29)" target="_blank" rel="noopener">Bangladesh DDM Standing Orders ↗</a></div>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="footer"><span>Shomoy / সময় · community coordination aid</span><span>Keep an exported backup · treat this device as shared if others can access it</span></footer>
+  </main>
+
+  <dialog id="request-dialog" class="dialog">
+    <form id="request-form" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">FIELD REPORT</p><h2>Log a community need</h2></div><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></div>
+      <p class="form-intro">Share only what responders need to locate and assess the request. No names or ID numbers. P1 means danger now; P2 means urgent within hours; P3 means follow-up. Use judgement and verify with responders—this is not an official triage score.</p>
+      <div class="form-grid">
+        <label class="span-2">Short description <span class="required">*</span><input name="title" required maxlength="100" placeholder="e.g. 3 households stranded near the east bridge"></label>
+        <label>Need type <span class="required">*</span><select name="category" required><option>Rescue</option><option>Medical</option><option>Safe water</option><option>Food</option><option>Shelter</option><option>Sanitation</option><option>Access</option><option>Other</option></select></label>
+        <label>Urgency <span class="required">*</span><select name="priority" required><option value="P1">P1 · Immediate safety risk</option><option value="P2" selected>P2 · Urgent, within hours</option><option value="P3">P3 · Needs follow-up</option></select></label>
+        <label class="span-2">Location: upazila / union / village / landmark <span class="required">*</span><input name="location" required maxlength="180" placeholder="e.g. Sariakandi / Kutubpur Union / near the school"></label>
+        <label>People affected <input name="people" type="number" min="0" max="100000" step="1" value="1" inputmode="numeric"></label>
+        <label>People needing extra assistance <input name="vulnerable" type="number" min="0" max="100000" step="1" value="0" inputmode="numeric"><small>For example: children, older people, people with disabilities.</small></label>
+        <label class="span-2">What is needed / situation <textarea name="details" rows="3" maxlength="600" placeholder="Describe the need, water/access conditions, and any safe contact route. Avoid personal medical details."></textarea></label>
+        <label>Access conditions <select name="access"><option value="Unknown">Unknown</option><option value="Reachable">Reachable</option><option value="Difficult">Difficult access</option><option value="Cut off">Cut off / isolated</option></select></label>
+        <label>Reference / safe contact route <input name="contact" maxlength="80" placeholder="e.g. volunteer radio team 2 (no personal name)"></label>
+        <div class="coords span-2"><div><strong>Optional location pin</strong><small>Only if safe and consented. GPS is not sent anywhere.</small></div><button type="button" id="get-location" class="button small secondary">Use this device's location</button></div>
+        <label>Latitude <input name="lat" type="number" min="-90" max="90" step="any" placeholder="Optional"></label>
+        <label>Longitude <input name="lon" type="number" min="-180" max="180" step="any" placeholder="Optional"></label>
+      </div>
+      <div class="form-actions"><button type="button" class="button secondary close-dialog">Cancel</button><button type="submit" class="button primary">Save report</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="resource-dialog" class="dialog">
+    <form id="resource-form" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">LOCAL CAPACITY</p><h2>Register available help</h2></div><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></div>
+      <p class="form-intro">List a resource only with permission. Do not publish private phone numbers or sensitive locations.</p>
+      <div class="form-grid">
+        <label class="span-2">Resource / team <span class="required">*</span><input name="name" required maxlength="100" placeholder="e.g. Rescue boat, crew of 3"></label>
+        <label>Type <select name="type"><option>Boat</option><option>Transport</option><option>Medical team</option><option>Shelter space</option><option>Safe water</option><option>Food</option><option>Rescue team</option><option>Other</option></select></label>
+        <label>Quantity / capacity <input name="quantity" maxlength="50" placeholder="e.g. 1 boat / 20 people"></label>
+        <label class="span-2">Location / coverage area <input name="location" required maxlength="160" placeholder="Union, village or operating area"></label>
+        <label class="span-2">Availability <select name="status"><option value="Available">Available</option><option value="Busy">Busy / assigned</option><option value="Unavailable">Unavailable</option></select></label>
+      </div>
+      <div class="form-actions"><button type="button" class="button secondary close-dialog">Cancel</button><button type="submit" class="button primary">Save resource</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog" class="dialog detail-dialog"><div id="detail-content"></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="response.js" defer></script>
+</body>
+</html>
